@@ -154,7 +154,7 @@ void FUnLuaEditorToolbar::BindToLua_Executed() const
     FString LuaModuleName;
     const auto ModifierKeys = FSlateApplication::Get().GetModifierKeys();
     const auto bIsAltDown = ModifierKeys.IsLeftAltDown() || ModifierKeys.IsRightAltDown();
-    if (bIsAltDown)
+    if (!bIsAltDown)
     {
         const auto Package = Blueprint->GetTypedOuter(UPackage::StaticClass());
         LuaModuleName = Package->GetName().RightChop(6).Replace(TEXT("/"), TEXT("."));

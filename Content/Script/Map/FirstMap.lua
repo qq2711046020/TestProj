@@ -17,8 +17,8 @@ local FirstMap = Class()
 --function FirstMap:UserConstructionScript()
 --end
 
---function FirstMap:ReceiveBeginPlay()
---end
+function FirstMap:ReceiveBeginPlay()
+end
 
 --function FirstMap:ReceiveEndPlay()
 --end

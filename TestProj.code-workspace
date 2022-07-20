@@ -2,11 +2,11 @@
 	"folders": [
 		{
 			"name": "TestProj",
-			"path": "."
+			"path": ".\\Content\\Script"
 		},
 		{
 			"name": "UE4",
-			"path": "C:\\Program Files\\Epic Games\\UE_4.27"
+			"path": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine"
 		}
 	],
 	"settings": {
