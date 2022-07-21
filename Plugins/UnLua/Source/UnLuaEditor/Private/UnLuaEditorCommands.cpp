@@ -28,7 +28,8 @@ void FUnLuaEditorCommands::RegisterCommands()
     UI_COMMAND(ReportIssue, "Report issue", "Create an issue on github", EUserInterfaceActionType::Button, FInputChord());
     UI_COMMAND(About, "About", "About this version", EUserInterfaceActionType::Button, FInputChord());
     UI_COMMAND(GenerateIntelliSense, "Generate IntelliSense", "Generate intelliSense files", EUserInterfaceActionType::Button, FInputChord());
-    UI_COMMAND(RevealInExplorer, "Reveal in Explorer", "Reveal lua file in explorer", EUserInterfaceActionType::Button, FInputChord());
+	UI_COMMAND(RevealInExplorer, "Reveal in Explorer", "Reveal lua file in explorer", EUserInterfaceActionType::Button, FInputChord());
+	UI_COMMAND(OpenLuaInIDE, "Open Lua File In IDE", "Open lua file In VsCode", EUserInterfaceActionType::Button, FInputChord());
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -43,6 +43,7 @@ FUnLuaEditorStyle::FUnLuaEditorStyle()
     Set("UnLuaEditor.UnbindFromLua", new IMAGE_BRUSH("Icons/icon_unbind_from_lua_40x", Icon40x40));
     Set("UnLuaEditor.HotReload", new IMAGE_BRUSH("Icons/icon_reload_40x", Icon40x40));
     Set("UnLuaEditor.GenerateIntelliSense", new IMAGE_BRUSH("Icons/icon_intellisense_40x", Icon40x40));
+    Set("UnLuaEditor.OpenLuaInIDE", new IMAGE_BRUSH("Icons/icon_reveal_in_explorer_40x", Icon40x40));
 
     FSlateStyleRegistry::RegisterSlateStyle(*this);
 }

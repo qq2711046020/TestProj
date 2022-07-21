@@ -18,6 +18,9 @@ local FirstMap = Class()
 --end
 
 function FirstMap:ReceiveBeginPlay()
+    local WidgetClass = LoadClass("WidgetBlueprint'/Game/UI/NewWidgetBlueprint.NewWidgetBlueprint_C'")
+    local Widget = UE4.UWidgetBlueprintLibrary.Create(self, WidgetClass)
+    Widget:AddToViewport(0)
 end
 
 --function FirstMap:ReceiveEndPlay()

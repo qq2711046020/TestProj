@@ -36,5 +36,6 @@ public:
     TSharedPtr<FUICommandInfo> ReportIssue;
     TSharedPtr<FUICommandInfo> About;
     TSharedPtr<FUICommandInfo> GenerateIntelliSense;
-    TSharedPtr<FUICommandInfo> RevealInExplorer;
+	TSharedPtr<FUICommandInfo> RevealInExplorer;
+	TSharedPtr<FUICommandInfo> OpenLuaInIDE;
 };

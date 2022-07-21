@@ -15,6 +15,13 @@ function ProcessConsoleExec(Cmd)
 end
 
 function FuncMap.Test()
-    print("Test")
+    print("Test11")
+end
+
+function FuncMap.ReloadLua()
+    UE4.UUnLuaFunctionLibrary.HotReload()
+end
+
+function FuncMap.LuaDebug()
     require("LuaPanda").start()
 end

@@ -38,7 +38,9 @@ public:
 
     void UnbindFromLua_Executed() const;
 
-    void RevealInExplorer_Executed();
+	void RevealInExplorer_Executed();
+
+	void OpenLuaInIDE_Executed();
 
 protected:
     virtual void BindCommands();

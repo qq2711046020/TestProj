@@ -19,6 +19,7 @@
 #include "UnLuaSettings.h"
 #include "UnLuaIntelliSense.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
+#include "SourceCodeNavigation.h"
 
 #define LOCTEXT_NAMESPACE "FUnLuaEditorModule"
 
@@ -40,7 +41,8 @@ void FUnLuaEditorToolbar::BindCommands()
     CommandList->MapAction(Commands.CopyAsRelativePath, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::CopyAsRelativePath_Executed));
     CommandList->MapAction(Commands.BindToLua, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::BindToLua_Executed));
     CommandList->MapAction(Commands.UnbindFromLua, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::UnbindFromLua_Executed));
-    CommandList->MapAction(Commands.RevealInExplorer, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::RevealInExplorer_Executed));
+	CommandList->MapAction(Commands.RevealInExplorer, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::RevealInExplorer_Executed)); 
+	CommandList->MapAction(Commands.OpenLuaInIDE, FExecuteAction::CreateRaw(this, &FUnLuaEditorToolbar::OpenLuaInIDE_Executed));
 }
 
 void FUnLuaEditorToolbar::BuildToolbar(FToolBarBuilder& ToolbarBuilder, UObject* InContextObject)
@@ -65,9 +67,10 @@ void FUnLuaEditorToolbar::BuildToolbar(FToolBarBuilder& ToolbarBuilder, UObject*
             }
             else
             {
-                MenuBuilder.AddMenuEntry(Commands.CopyAsRelativePath, NAME_None, LOCTEXT("CopyAsRelativePath", "Copy as Relative Path"));
-                MenuBuilder.AddMenuEntry(Commands.RevealInExplorer, NAME_None, LOCTEXT("RevealInExplorer", "Reveal in Explorer"));
-                MenuBuilder.AddMenuEntry(Commands.CreateLuaTemplate, NAME_None, LOCTEXT("CreateLuaTemplate", "Create Lua Template"));
+				//MenuBuilder.AddMenuEntry(Commands.CopyAsRelativePath, NAME_None, LOCTEXT("CopyAsRelativePath", "Copy as Relative Path"));
+				//MenuBuilder.AddMenuEntry(Commands.RevealInExplorer, NAME_None, LOCTEXT("RevealInExplorer", "Reveal in Explorer"));
+				MenuBuilder.AddMenuEntry(Commands.CreateLuaTemplate, NAME_None, LOCTEXT("CreateLuaTemplate", "Create Lua Template"));
+				MenuBuilder.AddMenuEntry(Commands.OpenLuaInIDE, NAME_None, LOCTEXT("OpenLuaInIDE", "Open Lua File In IDE"));
                 MenuBuilder.AddMenuEntry(Commands.UnbindFromLua, NAME_None, LOCTEXT("Unbind", "Unbind"));
             }
             return MenuBuilder.MakeWidget();
@@ -346,6 +349,39 @@ void FUnLuaEditorToolbar::RevealInExplorer_Executed()
         NotificationInfo.bUseThrobber = true;
         FSlateNotificationManager::Get().AddNotification(NotificationInfo);
     }
+}
+
+void FUnLuaEditorToolbar::OpenLuaInIDE_Executed()
+{
+	const auto Blueprint = Cast<UBlueprint>(ContextObject);
+	if (!IsValid(Blueprint))
+		return;
+
+	UClass* Class = Blueprint->GeneratedClass;
+
+	const auto Func = Class->FindFunctionByName(FName("GetModuleName"));
+	if (!IsValid(Func))
+		return;
+
+	FString ModuleName;
+	Class->ProcessEvent(Func, &ModuleName);
+
+	if (ModuleName.IsEmpty())
+	{
+		FNotificationInfo Info(LOCTEXT("ModuleNameRequired", "Please specify a module name first"));
+		Info.ExpireDuration = 5;
+		FSlateNotificationManager::Get().AddNotification(Info);
+		return;
+	}
+
+	//TArray<FString> ModuleNameParts;
+	//ModuleName.ParseIntoArray(ModuleNameParts, TEXT("."));
+	//const auto ClassName = ModuleNameParts.Last();
+
+	const auto RelativePath = ModuleName.Replace(TEXT("."), TEXT("/"));
+	const auto FileName = FString::Printf(TEXT("%s%s.lua"), *GLuaSrcFullPath, *RelativePath);
+
+    FSourceCodeNavigation::OpenSourceFile(FileName);
 }
 
 void FUnLuaEditorToolbar::CopyAsRelativePath_Executed() const
