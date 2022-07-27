@@ -28,6 +28,7 @@ public class QuickReplace : ModuleRules
 				"Core",
 				// ... add other public dependencies that you statically link with here ...
 				"EditorScriptingUtilities",
+				"Blutility",
 			}
 			);
 			
