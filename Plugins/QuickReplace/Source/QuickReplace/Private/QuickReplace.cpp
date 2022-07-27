@@ -11,6 +11,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
+#include "MyEditorUtilityWidget.h"
+#include "EditorUtilitySubsystem.h"
+#include "EditorUtilityWidgetBlueprint.h"
 
 static const FName QuickReplaceTabName("QuickReplace");
 
@@ -51,25 +54,12 @@ void FQuickReplaceModule::ShutdownModule()
 
 void FQuickReplaceModule::PluginButtonClicked()
 {
-	FString DirectoryPath = "/Game/UI";
-	TArray<FString> Files = UEditorAssetLibrary::ListAssets(DirectoryPath);
-	for (auto& AssetPath : Files)
+	UEditorUtilityWidgetBlueprint* StartWidget = LoadObject<UEditorUtilityWidgetBlueprint>(nullptr, TEXT("/QuickReplace/TestEU.TestEU"), nullptr, LOAD_None, nullptr);
+	if (StartWidget)
 	{
-		if (UWidgetBlueprint* WidgetBlueprint = Cast<UWidgetBlueprint>(UEditorAssetLibrary::LoadAsset(AssetPath)))
-		{
-			TArray<UWidget*> Widgets;
-			WidgetBlueprint->WidgetTree->GetAllWidgets(Widgets);
-			for (UWidget* Widget : Widgets)
-			{
-				if (UTextBlock* Text = Cast<UTextBlock>(Widget))
-				{
-					Text->SetText(FText());
-				}
-			}
-			UEditorAssetLibrary::SaveLoadedAsset(WidgetBlueprint);
-		}
+		UEditorUtilitySubsystem* EditorUtilitySubsystem = GEditor->GetEditorSubsystem<UEditorUtilitySubsystem>();
+		EditorUtilitySubsystem->SpawnAndRegisterTab(StartWidget);
 	}
-		
 }
 
 void FQuickReplaceModule::RegisterMenus()
