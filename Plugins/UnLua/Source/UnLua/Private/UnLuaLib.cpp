@@ -187,6 +187,7 @@ namespace UnLua
             end
 
             _G.Class = Class
+            require "ProcessConsoleExec"
             )";
 
             lua_register(L, "UEPrint", LogInfo);
