@@ -23,5 +23,5 @@ function FuncMap.ReloadLua()
 end
 
 function FuncMap.LuaDebug()
-    require("LuaPanda").start()
+    require("LuaPanda").start("192.168.0.105")
 end
