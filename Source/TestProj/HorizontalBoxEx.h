@@ -3,17 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/HorizontalBox.h"
+#include "UObject/ObjectMacros.h"
+#include "Widgets/SWidget.h"
+#include "Widgets/SBoxPanel.h"
+#include "Components/PanelWidget.h"
 #include "HorizontalBoxEx.generated.h"
+
+class UHorizontalBoxSlot;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIsMirrorChangedDynamic, bool, bIsMirror);
 /**
- * 
+ * Allows widgets to be laid out in a flow horizontally.
+ *
+ * * Many Children
+ * * Flow Horizontal
  */
-UCLASS()
-class TESTPROJ_API UHorizontalBoxEx : public UHorizontalBox
+UCLASS(meta = (ShortTooltip = "A layout panel for automatically laying child widgets out horizontally"))
+class TESTPROJ_API UHorizontalBoxEx : public UPanelWidget
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "HorizontalBoxEx")
@@ -33,13 +41,36 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content")
 	TEnumAsByte<EVerticalAlignment> VerticalAlignment;
 
+	/**  */
 	UFUNCTION(BlueprintCallable, Category = "Widget")
-	UHorizontalBoxSlot* AddChildToHorizontalBoxEx(UWidget* Content);
+	UHorizontalBoxSlot* AddChildToHorizontalBox(UWidget* Content);
+
+#if WITH_EDITOR
+	// UWidget interface
+	virtual const FText GetPaletteCategory() override;
+	// End UWidget interface
+#endif
+
+	void UpdateChildSlot(UHorizontalBoxSlot* ChildSlot);
+
+	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 protected:
 	UPROPERTY(BlueprintAssignable, Category = Events, meta = (DisplayName = "On Is Mirror Changed"))
 	FOnIsMirrorChangedDynamic BP_IsMirrorChanged;
 
+	// UPanelWidget
+	virtual UClass* GetSlotClass() const override;
 	virtual void OnSlotAdded(UPanelSlot* Slot) override;
 	virtual void OnSlotRemoved(UPanelSlot* Slot) override;
+	// End UPanelWidget
+
+protected:
+
+	TSharedPtr<class SHorizontalBox> MyHorizontalBox;
+
+protected:
+	// UWidget interface
+	virtual TSharedRef<SWidget> RebuildWidget() override;
+	// End of UWidget interface
 };

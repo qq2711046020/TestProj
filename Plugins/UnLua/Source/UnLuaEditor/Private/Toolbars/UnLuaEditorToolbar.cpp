@@ -361,24 +361,6 @@ void FUnLuaEditorToolbar::OpenLuaInIDE_Executed()
 		return;
 
 	UClass* Class = Blueprint->GeneratedClass;
-    // Test
-	if (Class->IsChildOf(UUserWidget::StaticClass()))
-	{
-        TArray<UWidget*> Widgets;
-        const auto WidgetBlueprint = Cast<UWidgetBlueprint>(ContextObject);
-        UWidgetTree* WidgetTree = WidgetBlueprint->WidgetTree;
-        WidgetTree->GetAllWidgets(Widgets);
-		for (UWidget* Widget : Widgets)
-		{
-			if (Widget->IsA<UTextBlock>())
-			{
-                FString Label = Widget->GetDisplayLabel();
-                UE_LOG(LogUnLua, Warning, TEXT("Find Text:%s"), *Label);
-			}
-		}
-        return;
-	}
-    //
 	const auto Func = Class->FindFunctionByName(FName("GetModuleName"));
 	if (!IsValid(Func))
 		return;

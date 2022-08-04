@@ -1,8 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "HorizontalBoxEx.h"
 #include "Components/HorizontalBoxSlot.h"
+
+#define LOCTEXT_NAMESPACE "UMG"
+
+/////////////////////////////////////////////////////
+// UHorizontalBoxEx
+
+UHorizontalBoxEx::UHorizontalBoxEx(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	bIsVariable = false;
+	Visibility = ESlateVisibility::SelfHitTestInvisible;
+}
 
 void UHorizontalBoxEx::SetIsMirror(bool bIsMirror)
 {
@@ -22,14 +33,24 @@ void UHorizontalBoxEx::SetIsMirror(bool bIsMirror)
 	BP_IsMirrorChanged.Broadcast(bIsMirror);
 }
 
-UHorizontalBoxSlot* UHorizontalBoxEx::AddChildToHorizontalBoxEx(UWidget* Content)
+void UHorizontalBoxEx::UpdateChildSlot(UHorizontalBoxSlot* ChildSlot)
 {
-	UHorizontalBoxSlot* ChildSlot = Cast<UHorizontalBoxSlot>(Super::AddChild(Content));
 	ChildSlot->SetPadding(Padding);
 	ChildSlot->SetSize(Size);
 	ChildSlot->SetHorizontalAlignment(HorizontalAlignment);
 	ChildSlot->SetVerticalAlignment(VerticalAlignment);
-	return ChildSlot;
+}
+
+void UHorizontalBoxEx::ReleaseSlateResources(bool bReleaseChildren)
+{
+	Super::ReleaseSlateResources(bReleaseChildren);
+
+	MyHorizontalBox.Reset();
+}
+
+UClass* UHorizontalBoxEx::GetSlotClass() const
+{
+	return UHorizontalBoxSlot::StaticClass();
 }
 
 void UHorizontalBoxEx::OnSlotAdded(UPanelSlot* InSlot)
@@ -37,12 +58,11 @@ void UHorizontalBoxEx::OnSlotAdded(UPanelSlot* InSlot)
 	// Add the child to the live canvas if it already exists
 	if (MyHorizontalBox.IsValid())
 	{
-		UHorizontalBoxSlot* ChildSlot = Cast<UHorizontalBoxSlot>(InSlot);
-		ChildSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
-		ChildSlot->SetPadding(Padding);
-		ChildSlot->SetSize(Size);
-		ChildSlot->SetHorizontalAlignment(HorizontalAlignment);
-		ChildSlot->SetVerticalAlignment(VerticalAlignment);
+		if (UHorizontalBoxSlot* ChildSlot = CastChecked<UHorizontalBoxSlot>(InSlot))
+		{
+			ChildSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
+			UpdateChildSlot(ChildSlot);
+		}
 	}
 }
 
@@ -58,3 +78,40 @@ void UHorizontalBoxEx::OnSlotRemoved(UPanelSlot* InSlot)
 		}
 	}
 }
+
+UHorizontalBoxSlot* UHorizontalBoxEx::AddChildToHorizontalBox(UWidget* Content)
+{
+	UHorizontalBoxSlot* ChildSlot = Cast<UHorizontalBoxSlot>(Super::AddChild(Content));
+	UpdateChildSlot(ChildSlot);
+	return ChildSlot;
+}
+
+TSharedRef<SWidget> UHorizontalBoxEx::RebuildWidget()
+{
+	MyHorizontalBox = SNew(SHorizontalBox);
+
+	for (UPanelSlot* PanelSlot : Slots)
+	{
+		if (UHorizontalBoxSlot* TypedSlot = Cast<UHorizontalBoxSlot>(PanelSlot))
+		{
+			TypedSlot->Parent = this;
+			TypedSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
+			UpdateChildSlot(TypedSlot);
+		}
+	}
+
+	return MyHorizontalBox.ToSharedRef();
+}
+
+#if WITH_EDITOR
+
+const FText UHorizontalBoxEx::GetPaletteCategory()
+{
+	return LOCTEXT("Panel", "Panel");
+}
+
+#endif
+
+/////////////////////////////////////////////////////
+
+#undef LOCTEXT_NAMESPACE

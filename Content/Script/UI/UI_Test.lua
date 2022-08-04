@@ -24,14 +24,21 @@ function UI_Test:Construct()
     self.Btn_Test.OnClicked:Add(self, self.OnClick_Test)
     self.Btn_Debug.OnClicked:Add(self, self.OnClick_Debug)
     self.Btn_Exit.OnClicked:Add(self, self.OnClick_Exit)
+    self.HorizontalBoxEx_108.BP_IsMirrorChanged:Add(self, self.OnIsMirrorChanged)
 end
 
 function UI_Test:OnClick_Test()
     self.Text_Test:SetText("Testing")
+    self.HorizontalBoxEx_108:SetIsMirror(true)
 end
 
 function UI_Test:OnClick_Debug()
-    require("LuaPanda").start("192.168.0.105")
+    --require("LuaPanda").start("192.168.0.105")
+    self.HorizontalBoxEx_108:SetIsMirror(false)
+end
+
+function UI_Test:OnIsMirrorChanged(bIsMirror)
+    self.Image_2:SetRenderScale(UE4.FVector2D(bIsMirror and -1 or 1, 1))
 end
 
 function UI_Test:OnClick_Exit()
