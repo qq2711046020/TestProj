@@ -11,6 +11,8 @@ public class TestProj : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
+			"Slate", "SlateCore",
+			"UMG",
 			"UnLua",
 			"Lua"
 		});

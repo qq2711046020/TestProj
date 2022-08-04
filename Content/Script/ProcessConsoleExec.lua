@@ -15,7 +15,7 @@ function ProcessConsoleExec(Cmd)
 end
 
 function FuncMap.Test()
-    print("Test11")
+    require("socketxxx")
 end
 
 function FuncMap.ReloadLua()
