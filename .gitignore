@@ -2,6 +2,9 @@
 .vs/
 .vscode/
 
+#pdb
+*.pdb
+
 # Compiled Object files
 *.slo
 *.lo
@@ -48,7 +51,7 @@ SourceArt/**/*.tga
 
 # Binary Files
 !Binaries/*
-Plugins/*/Binaries/*
+!Plugins/*/Binaries/*
 
 # Builds
 Build/*
