@@ -9,7 +9,7 @@
 #include "Components/PanelWidget.h"
 #include "HorizontalBoxEx.generated.h"
 
-class UHorizontalBoxSlot;
+class UHorizontalBoxExSlot;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIsMirrorChangedDynamic, bool, bIsMirror);
 /**
@@ -43,7 +43,7 @@ public:
 
 	/**  */
 	UFUNCTION(BlueprintCallable, Category = "Widget")
-	UHorizontalBoxSlot* AddChildToHorizontalBox(UWidget* Content);
+	UHorizontalBoxExSlot* AddChildToHorizontalBox(UWidget* Content);
 
 #if WITH_EDITOR
 	// UWidget interface
@@ -51,7 +51,7 @@ public:
 	// End UWidget interface
 #endif
 
-	void UpdateChildSlot(UHorizontalBoxSlot* ChildSlot);
+	void UpdateChildSlot(UHorizontalBoxExSlot* ChildSlot);
 
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 

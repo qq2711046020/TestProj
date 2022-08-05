@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "HorizontalBoxEx.h"
-#include "Components/HorizontalBoxSlot.h"
+#include "HorizontalBoxExSlot.h"
 
 #define LOCTEXT_NAMESPACE "UMG"
 
@@ -13,6 +13,9 @@ UHorizontalBoxEx::UHorizontalBoxEx(const FObjectInitializer& ObjectInitializer)
 {
 	bIsVariable = false;
 	Visibility = ESlateVisibility::SelfHitTestInvisible;
+	HorizontalAlignment = HAlign_Fill;
+	VerticalAlignment = VAlign_Fill;
+	Size = FSlateChildSize(ESlateSizeRule::Automatic);
 }
 
 void UHorizontalBoxEx::SetIsMirror(bool bIsMirror)
@@ -33,12 +36,17 @@ void UHorizontalBoxEx::SetIsMirror(bool bIsMirror)
 	BP_IsMirrorChanged.Broadcast(bIsMirror);
 }
 
-void UHorizontalBoxEx::UpdateChildSlot(UHorizontalBoxSlot* ChildSlot)
+void UHorizontalBoxEx::UpdateChildSlot(UHorizontalBoxExSlot* ChildSlot)
 {
-	ChildSlot->SetPadding(Padding);
-	ChildSlot->SetSize(Size);
-	ChildSlot->SetHorizontalAlignment(HorizontalAlignment);
-	ChildSlot->SetVerticalAlignment(VerticalAlignment);
+	//ChildSlot->SetPadding(Padding);
+	//ChildSlot->SetSize(Size);
+	//ChildSlot->SetHorizontalAlignment(HorizontalAlignment);
+	//ChildSlot->SetVerticalAlignment(VerticalAlignment);
+	ChildSlot->Raw_Padding = Padding;
+	ChildSlot->Raw_Size = Size;
+	ChildSlot->Raw_HorizontalAlignment = HorizontalAlignment;
+	ChildSlot->Raw_VerticalAlignment = VerticalAlignment;
+	ChildSlot->SynchronizeProperties();
 }
 
 void UHorizontalBoxEx::ReleaseSlateResources(bool bReleaseChildren)
@@ -50,7 +58,7 @@ void UHorizontalBoxEx::ReleaseSlateResources(bool bReleaseChildren)
 
 UClass* UHorizontalBoxEx::GetSlotClass() const
 {
-	return UHorizontalBoxSlot::StaticClass();
+	return UHorizontalBoxExSlot::StaticClass();
 }
 
 void UHorizontalBoxEx::OnSlotAdded(UPanelSlot* InSlot)
@@ -58,10 +66,10 @@ void UHorizontalBoxEx::OnSlotAdded(UPanelSlot* InSlot)
 	// Add the child to the live canvas if it already exists
 	if (MyHorizontalBox.IsValid())
 	{
-		if (UHorizontalBoxSlot* ChildSlot = CastChecked<UHorizontalBoxSlot>(InSlot))
+		if (UHorizontalBoxExSlot* ChildSlot = CastChecked<UHorizontalBoxExSlot>(InSlot))
 		{
-			ChildSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
 			UpdateChildSlot(ChildSlot);
+			ChildSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
 		}
 	}
 }
@@ -79,9 +87,9 @@ void UHorizontalBoxEx::OnSlotRemoved(UPanelSlot* InSlot)
 	}
 }
 
-UHorizontalBoxSlot* UHorizontalBoxEx::AddChildToHorizontalBox(UWidget* Content)
+UHorizontalBoxExSlot* UHorizontalBoxEx::AddChildToHorizontalBox(UWidget* Content)
 {
-	UHorizontalBoxSlot* ChildSlot = Cast<UHorizontalBoxSlot>(Super::AddChild(Content));
+	UHorizontalBoxExSlot* ChildSlot = Cast<UHorizontalBoxExSlot>(Super::AddChild(Content));
 	UpdateChildSlot(ChildSlot);
 	return ChildSlot;
 }
@@ -92,7 +100,7 @@ TSharedRef<SWidget> UHorizontalBoxEx::RebuildWidget()
 
 	for (UPanelSlot* PanelSlot : Slots)
 	{
-		if (UHorizontalBoxSlot* TypedSlot = Cast<UHorizontalBoxSlot>(PanelSlot))
+		if (UHorizontalBoxExSlot* TypedSlot = Cast<UHorizontalBoxExSlot>(PanelSlot))
 		{
 			TypedSlot->Parent = this;
 			TypedSlot->BuildSlot(MyHorizontalBox.ToSharedRef());
