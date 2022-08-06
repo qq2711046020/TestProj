@@ -15,6 +15,8 @@
 #include "UnLuaExtensionsModule.h"
 #include "LuaEnv.h"
 #include "luasocket.h"
+#include "checks.h"
+#include "pb.h"
 
 void FUnLuaExtensionsModule::StartupModule()
 {
@@ -28,11 +30,25 @@ void FUnLuaExtensionsModule::ShutdownModule()
 {
     UnLua::FLuaEnv::OnCreated.Remove(Handle);
 }
-
+extern "C" int luaopen_pb(lua_State*);
 void FUnLuaExtensionsModule::OnLuaEnvCreated(UnLua::FLuaEnv& Env)
 {
     Env.AddBuiltInLoader(TEXT("socket"), luaopen_socket_core);
     Env.AddBuiltInLoader(TEXT("socket.core"), luaopen_socket_core);
+
+    static const luaL_Reg ExtendedLibs[] = {
+	    {"checks", luaopen_checks},
+		{"pb", luaopen_pb},
+		{NULL, NULL}
+    };
+
+    lua_State* L = Env.GetMainState();
+    for (const luaL_Reg* Lib = ExtendedLibs; Lib->func; ++Lib)
+    {
+        const int32 top = lua_gettop(L);
+        luaL_requiref(L, Lib->name, Lib->func, 0);
+        lua_settop(L, top);
+    }
 }
 
 IMPLEMENT_MODULE(FUnLuaExtensionsModule, UnLuaExtensions)

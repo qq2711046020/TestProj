@@ -10,7 +10,7 @@ require "UnLua"
 
 ---@class UI_Test
 local UI_Test = Class()
-
+local checks = require("checks")
 --function UI_Test:Initialize(Initializer)
 --end
 
@@ -28,12 +28,18 @@ function UI_Test:Construct()
 end
 
 function UI_Test:OnClick_Test()
-    self.Text_Test:SetText("Testing")
-    self.HorizontalBoxEx_108:SetIsMirror(true)
+    --self.Text_Test:SetText("Testing")
+    --self.HorizontalBoxEx_108:SetIsMirror(true)
+    self:Test(1, "aa")
+end
+
+function UI_Test:Test(num, str)
+    checks("table", "number", "string")
+    print("check over")
 end
 
 function UI_Test:OnClick_Debug()
-    --require("LuaPanda").start("192.168.0.105")
+    require("LuaPanda").start("192.168.0.105")
     self.HorizontalBoxEx_108:SetIsMirror(false)
 end
 
