@@ -30,7 +30,8 @@ void FUnLuaExtensionsModule::ShutdownModule()
 {
     UnLua::FLuaEnv::OnCreated.Remove(Handle);
 }
-extern "C" int luaopen_pb(lua_State*);
+//extern int luaopen_checks(lua_State*);
+//extern int luaopen_pb(lua_State*);
 void FUnLuaExtensionsModule::OnLuaEnvCreated(UnLua::FLuaEnv& Env)
 {
     Env.AddBuiltInLoader(TEXT("socket"), luaopen_socket_core);
