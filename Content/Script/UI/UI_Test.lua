@@ -35,6 +35,7 @@ end
 
 function UI_Test:Test(num, str)
     checks("table", "number", "string")
+    local pb = require("pb")
     print("check over")
 end
 

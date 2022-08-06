@@ -3,6 +3,7 @@
 	"Modules": 
 	{
 		"Lua": "UE4Editor-Lua.dll",
+		"LuaProtobuf": "UE4Editor-LuaProtobuf.dll",
 		"UnLua": "UE4Editor-UnLua.dll",
 		"UnLuaEditor": "UE4Editor-UnLuaEditor.dll"
 	}

@@ -16,7 +16,6 @@
 #include "LuaEnv.h"
 #include "luasocket.h"
 #include "checks.h"
-#include "pb.h"
 
 void FUnLuaExtensionsModule::StartupModule()
 {
@@ -39,7 +38,6 @@ void FUnLuaExtensionsModule::OnLuaEnvCreated(UnLua::FLuaEnv& Env)
 
     static const luaL_Reg ExtendedLibs[] = {
 	    {"checks", luaopen_checks},
-		{"pb", luaopen_pb},
 		{NULL, NULL}
     };
 

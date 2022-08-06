@@ -53,8 +53,5 @@ public class UnLuaExtensions : ModuleRules
 
         var Checks = Path.GetFullPath(Path.Combine(ModuleDirectory, "ThirdParty", "Checks"));
         PublicIncludePaths.Add(Checks);
-
-        var Pb = Path.GetFullPath(Path.Combine(ModuleDirectory, "ThirdParty", "Pb"));
-        PublicIncludePaths.Add(Pb);
     }
 }

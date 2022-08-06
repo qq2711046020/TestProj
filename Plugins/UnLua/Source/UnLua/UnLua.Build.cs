@@ -60,7 +60,8 @@ public class UnLua : ModuleRules
                 "Slate",
                 "InputCore",
                 "Projects",
-                "Lua"
+                "Lua",
+                "LuaProtobuf"
             }
         );
 

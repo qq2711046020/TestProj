@@ -37,6 +37,11 @@
             "Name": "UnLuaDefaultParamCollector",
             "Type": "Program",
             "LoadingPhase": "PostConfigInit"
+        },
+        {
+            "Name": "LuaProtobuf",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
         }
     ]
 }

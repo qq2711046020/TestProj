@@ -24,6 +24,7 @@
 #include "LuaCore.h"
 #include "LuaDynamicBinding.h"
 #include "lualib.h"
+#include "LuaProtobuf.h"
 #include "UELib.h"
 #include "ObjectReferencer.h"
 #include "UnLuaDelegates.h"
@@ -50,6 +51,8 @@ namespace UnLua
         AllEnvs.Add(L, this);
 
         luaL_openlibs(L);
+        FLuaProtobuf& LuaProtobuf = FModuleManager::LoadModuleChecked<FLuaProtobuf>(TEXT("LuaProtobuf"));
+        LuaProtobuf.RegisterLuaLib(L);
 
         AddSearcher(LoadFromCustomLoader, 2);
         AddSearcher(LoadFromFileSystem, 3);
