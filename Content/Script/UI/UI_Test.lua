@@ -30,7 +30,9 @@ end
 function UI_Test:OnClick_Test()
     --self.Text_Test:SetText("Testing")
     --self.HorizontalBoxEx_108:SetIsMirror(true)
-    self:Test(1, "aa")
+    --self:Test(1, "aa")
+    local s = UE4.UTestProjLibrary.GetConfig("TestSection", "TestKey", "cjh20220810.ini")
+    print(s)
 end
 
 function UI_Test:Test(num, str)
@@ -40,8 +42,10 @@ function UI_Test:Test(num, str)
 end
 
 function UI_Test:OnClick_Debug()
-    require("LuaPanda").start("192.168.0.105")
-    self.HorizontalBoxEx_108:SetIsMirror(false)
+    UE4.UTestProjLibrary.SetConfig("TestSection", "TestKey", "123123", "cjh20220810.ini")
+    print("Set")
+    --require("LuaPanda").start("192.168.0.105")
+    --self.HorizontalBoxEx_108:SetIsMirror(false)
 end
 
 function UI_Test:OnIsMirrorChanged(bIsMirror)
