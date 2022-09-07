@@ -1,0 +1,2 @@
+require "UnLua"
+return Class()
