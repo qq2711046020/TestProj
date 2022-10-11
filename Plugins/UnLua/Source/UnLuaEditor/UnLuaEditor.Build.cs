@@ -73,7 +73,8 @@ public class UnLuaEditor : ModuleRules
                 "Sockets",
                 "UnLua",
                 "Lua",
-                "ToolMenus"
+                "ToolMenus",
+                "SourceCodeAccess",
             }
         );
 
@@ -85,5 +86,10 @@ public class UnLuaEditor : ModuleRules
                 "AnimationBlueprintEditor",
             }
         );
+
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            PrivateDependencyModuleNames.Add("VisualStudioCodeSourceCodeAccess");
+        }
     }
 }

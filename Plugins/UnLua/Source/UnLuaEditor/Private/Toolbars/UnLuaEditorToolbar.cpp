@@ -8,6 +8,8 @@
 #include "HAL/PlatformApplicationMisc.h"
 #include "Interfaces/IPluginManager.h"
 #include "BlueprintEditor.h"
+#include "ISourceCodeAccessModule.h"
+#include "ISourceCodeAccessor.h"
 #include "LuaModuleLocator.h"
 #include "SBlueprintEditorToolbar.h"
 #include "Framework/Docking/SDockingTabWell.h"
@@ -383,7 +385,15 @@ void FUnLuaEditorToolbar::OpenLuaInIDE_Executed()
 	const auto RelativePath = ModuleName.Replace(TEXT("."), TEXT("/"));
 	const auto FileName = FString::Printf(TEXT("%s%s.lua"), *GLuaSrcFullPath, *RelativePath);
 
+#if PLATFORM_WINDOWS
+    // Load the source code access module
+    ISourceCodeAccessModule& SourceCodeAccessModule = FModuleManager::LoadModuleChecked<ISourceCodeAccessModule>(FName("SourceCodeAccess"));
+    IModuleInterface& VisualStudioCodeSourceCodeAccessModule = FModuleManager::LoadModuleChecked<IModuleInterface>(FName("VisualStudioCodeSourceCodeAccess"));
+    SourceCodeAccessModule.SetAccessor(FName("VisualStudioCode"));
+    SourceCodeAccessModule.GetAccessor().OpenFileAtLine(FileName, 1);
+#else
     FSourceCodeNavigation::OpenSourceFile(FileName);
+#endif
 }
 
 void FUnLuaEditorToolbar::CopyAsRelativePath_Executed() const
